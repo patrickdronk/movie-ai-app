@@ -1,24 +1,74 @@
-.header {
-    padding: 8px 50px;
-    background: #0d96c0;
+#root {
+  min-height: 100vh;
 }
-
-.header-div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.header {
+  background: #232d3a;
 }
 
 .content {
-    padding: 12px;
-    min-height: calc(100vh - (64px + 64.5px));
-}
-
-.header-image {
-    width: 3rem;
-    height: auto;
+  padding: 12px;
+  min-height: calc(100vh - (64px + 64.5px));
 }
 
 .footer {
-    text-align: center;
+  text-align: center;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #232d3a 0%, #023629 100%);
+}
+
+hanko-auth {
+  --container-max-width: 400px;
+  --container-padding: 24px;
+}
+
+hanko-profile {
+  --container-max-width: 400px;
+  --container-padding: 24px;
+}
+
+hanko-auth::part(container),
+hanko-profile::part(container) {
+  border: solid 1px #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+hanko-auth::part(headline1),
+hanko-profile::part(headline1),
+hanko-auth::part(headline2),
+hanko-profile::part(headline2) {
+  color: #000000d9;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-weight: 500;
+}
+
+hanko-auth::part(form-item) {
+  min-width: 100%;
+}
+
+hanko-auth::part(input),
+hanko-profile::part(input) {
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 4px 11px;
+  font-size: 14px;
+}
+
+hanko-auth::part(secondary-button) {
+  border-color: #d9d9d9;
+  color: #000000d9;
+}
+
+hanko-auth::part(divider) {
+  margin: 16px 0;
 }

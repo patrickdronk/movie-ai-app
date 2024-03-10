@@ -1,33 +1,22 @@
-import './App.css'
-import {Card, Layout} from "antd";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {Outlet} from "@tanstack/react-router";
-import MovieSearchBar from "./components/movieSearch/MovieSearchBar.jsx";
-
-const {Header, Footer, Content} = Layout
+import './App.css';
+import { RouterProvider } from '@tanstack/react-router';
+import { router } from './config/router.jsx';
+import { useSession } from './hooks/useSession.jsx';
+import { Skeleton } from 'antd';
+import apiClient from './config/apiClient.js';
 
 function App() {
+  const { loading, isValid, jwt } = useSession();
 
-    const queryClient = new QueryClient()
+  if (loading) {
+    return (<Skeleton>Loading...</Skeleton>);
+  }
 
-    return (
-        <QueryClientProvider client={queryClient}>
-            <Layout className="layout">
-                <Header className="header">
-                    <div className="header-div">
-                        <img className="header-image" src="/old-movie-camera.svg" alt="Vite"/>
-                        <MovieSearchBar/>
-                    </div>
-                </Header>
-                <Content className="content">
-                    <div className="site-layout-content">
-                        <Outlet/>
-                    </div>
-                </Content>
-                <Footer className="footer">Powered by MovingUp</Footer>
-            </Layout>
-        </QueryClientProvider>
-    )
+  apiClient.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+
+  return (
+    <RouterProvider router={router} context={{ isAuthenticated: isValid }} />
+  );
 }
 
-export default App
+export default App;

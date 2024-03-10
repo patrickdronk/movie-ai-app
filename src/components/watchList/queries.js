@@ -1,0 +1,6 @@
+import apiClient from '../../config/apiClient.js';
+
+export const getMovieByIds = async ids => {
+  const idQuery = ids.map(id => `id=${id}`).join('&');
+  return apiClient.get(`/movies?${idQuery}`);
+};
