@@ -15,5 +15,6 @@ jobs:
       - name: Deploy to Dokku
         uses: dokku/github-action@master
         with:
+          branch: main
           git_remote_url: 'ssh://dokku@patrickdronk.dev:22/movie-ai'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
