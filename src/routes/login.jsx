@@ -18,9 +18,10 @@ export default function Login() {
   useEffect(
     () =>
       hanko.onSessionCreated(async () => {
+        console.log("session created");
         await redirectAfterLogin();
       }),
-    [hanko, redirectAfterLogin]
+    [hanko, redirectAfterLogin],
   );
 
   useEffect(() => {
