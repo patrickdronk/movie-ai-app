@@ -7,7 +7,6 @@ import SearchBar from '../components/searchBar/SearchBar.jsx';
 
 export const Route = createFileRoute('/')({
   beforeLoad: ({ context, location }) => {
-    console.log(context.isAuthenticated);
     if (!context.isAuthenticated) {
       throw redirect({
         to: '/login',

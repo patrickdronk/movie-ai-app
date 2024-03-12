@@ -8,7 +8,7 @@ export function useSession() {
   const [sessionState, setSessionState] = useState({
     userID: "",
     jwt: "",
-    isValid: false,
+    isAuthenticated: false,
     loading: true,
     error: null,
   });
@@ -16,22 +16,23 @@ export function useSession() {
   useEffect(() => {
     const checkSession = async () => {
       if (hanko) {
-        const isValid = await hanko.session.isValid();
+        const isAuthenticated =  hanko.session.isValid();
         const session = hanko.session.get();
 
-        if (isValid && session) {
+
+        if (isAuthenticated && session) {
           const { userID, jwt = "" } = session;
           setSessionState({
             userID,
             jwt,
-            isValid,
+            isAuthenticated,
             loading: false,
             error: null,
           });
         } else {
           setSessionState((prevState) => ({
             ...prevState,
-            isValid: false,
+            isAuthenticated: false,
             loading: false,
             error: "Invalid session",
           }));
@@ -42,6 +43,13 @@ export function useSession() {
     checkSession();
   }, [hanko]);
 
+  const setIsAuthenticated = (isAuthenticated) => {
+    setSessionState((prevState) => ({
+      ...prevState,
+      isAuthenticated
+    }));
+  }
+
   const logout = async () => {
     try {
       await hanko?.user.logout();
@@ -50,5 +58,5 @@ export function useSession() {
     }
   };
 
-  return { ...sessionState, logout };
+  return { ...sessionState, setIsAuthenticated, logout };
 }
