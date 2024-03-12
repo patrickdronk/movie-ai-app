@@ -32,7 +32,6 @@ const SearchBar = () => {
   });
 
   const options = data?.data.movies.map(result => renderOption(result));
-  console.log(options);
 
   return (
     <div>

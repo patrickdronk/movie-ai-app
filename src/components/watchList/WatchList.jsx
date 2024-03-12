@@ -13,7 +13,6 @@ const WatchList = () => {
     },
   });
 
-  console.log(data);
   return data && <MovieView movies={data.data} />;
 };
 
