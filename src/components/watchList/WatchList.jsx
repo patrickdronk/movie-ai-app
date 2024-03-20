@@ -1,19 +1,33 @@
-import { getMovieByIds } from './queries.js';
-import { useQuery } from '@tanstack/react-query';
-import MovieView from '../movieView/MovieView.jsx';
 import './WatchList.css';
+import { Button, Card, Col, Empty, Row } from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import { getWatchListByUserId } from './queries.js';
 
 const WatchList = () => {
-  const movieIds = ['tt7286456', 'tt5001754', 'tt0371746', 'tt27687527'];
-
-  const { data } = useQuery({
-    queryKey: ['data'],
+  const { data, loading } = useQuery({
+    queryKey: 'watchList',
     queryFn: async () => {
-      return await getMovieByIds(movieIds)
+      return getWatchListByUserId();
     },
   });
 
-  return data && <MovieView movies={data.data} />;
+  console.log(data, loading);
+  return (
+    <Row justify={'center'}>
+      <Col span={20}>
+        <Card>
+          <Empty
+            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+            imageStyle={{ height: 60 }}
+            description={<span>No watchlist found</span>}
+          >
+            <Button type="primary">Create one</Button>
+          </Empty>
+        </Card>
+      </Col>
+    </Row>
+  )
+    ;
 };
 
 export default WatchList;
