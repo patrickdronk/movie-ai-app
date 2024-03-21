@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createWatchList } from './queries.js';
 import MovieView from '../movieView/MovieView.jsx';
 
-const WatchList = (data) => {
+const WatchList = ({data}) => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({

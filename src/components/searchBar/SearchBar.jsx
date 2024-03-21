@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { addMovieToWatchList, searchMovies } from './queries.js';
 
-const SearchBar = ({watchListId}) => {
+const SearchBar = ({ watchListId }) => {
   const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
 
@@ -14,7 +14,7 @@ const SearchBar = ({watchListId}) => {
 
   const { mutate } = useMutation({
     mutationKey: ['add_movie_to_watchlist'],
-    mutationFn: addMovieToWatchList,
+    mutationFn: ({ watchListId, imdbId }) => addMovieToWatchList(watchListId, imdbId),
     onSuccess: () => {
       queryClient.invalidateQueries('watchList');
     },
@@ -33,7 +33,7 @@ const SearchBar = ({watchListId}) => {
       <div>
         <div>{item.title}</div>
         <Button onClick={() => {
-          mutate(watchListId, item.imdbID)
+          mutate({ watchListId, imdbId: item.imdbID });
         }}>
           Add to Watchlist
         </Button>

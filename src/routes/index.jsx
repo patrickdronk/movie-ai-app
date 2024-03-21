@@ -35,7 +35,7 @@ function HomeComponent() {
     <BaseLayout>
       <Row style={{ marginBottom: '1rem' }}>
         <Col span={24}>
-          <SearchBar watchListId={data.data.watchListId}/>
+          <SearchBar watchListId={data?.data?.watchListId}/>
         </Col>
       </Row>
       <Row>
