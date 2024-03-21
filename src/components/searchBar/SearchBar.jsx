@@ -1,15 +1,23 @@
-import { AutoComplete, Row, Col, Avatar, Input } from 'antd';
-import { useQuery } from '@tanstack/react-query';
+import { AutoComplete, Row, Col, Avatar, Input, Button } from 'antd';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { searchMovies } from './queries.js';
+import { addMovieToWatchList, searchMovies } from './queries.js';
 
-const SearchBar = () => {
+const SearchBar = ({watchListId}) => {
+  const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
 
   const { data } = useQuery({
-    queryKey: ['data', query],
-    queryFn: () => searchMovies(query),
-    enabled: !!query,
+    queryKey: ['search_movies'],
+    queryFn: () => searchMovies(query), enabled: !!query,
+  });
+
+  const { mutate } = useMutation({
+    mutationKey: ['add_movie_to_watchlist'],
+    mutationFn: addMovieToWatchList,
+    onSuccess: () => {
+      queryClient.invalidateQueries('watchList');
+    },
   });
 
 
@@ -20,35 +28,35 @@ const SearchBar = () => {
   };
 
   const renderOption = item => ({
-    value: item.title,
-    label: (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar src={item.poster} size={80} shape={'square'} style={{ marginRight: '8px' }} />
-        <div>
-          <div>{item.title}</div>
-        </div>
+    value: item.title, label: (<div style={{ display: 'flex', alignItems: 'center' }}>
+      <Avatar src={item.poster} size={80} shape={'square'} style={{ marginRight: '8px' }} />
+      <div>
+        <div>{item.title}</div>
+        <Button onClick={() => {
+          mutate(watchListId, item.imdbID)
+        }}>
+          Add to Watchlist
+        </Button>
       </div>
-    ),
+    </div>),
   });
 
   const options = data?.data.movies.map(result => renderOption(result));
 
-  return (
-    <div>
-      <Row justify={'center'}>
-        <Col span={20}>
-          <AutoComplete
-            options={options}
-            style={{ width: '100%', marginBottom: '16px' }}
-            onSelect={handleSearch}
-            onSearch={handleSearch}
-          >
-            <Input.Search size="large" placeholder="Search" enterButton />
-          </AutoComplete>
-        </Col>
-      </Row>
-    </div>
-  );
+  return (<div>
+    <Row justify={'center'}>
+      <Col span={20}>
+        <AutoComplete
+          options={options}
+          style={{ width: '100%', marginBottom: '16px' }}
+          onSelect={handleSearch}
+          onSearch={handleSearch}
+        >
+          <Input.Search size="large" placeholder="Search" enterButton />
+        </AutoComplete>
+      </Col>
+    </Row>
+  </div>);
 };
 
 export default SearchBar;

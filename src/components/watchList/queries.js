@@ -8,3 +8,7 @@ export const getMovieByIds = async ids => {
 export const getWatchListByUserId = async () => {
   return apiClient.get(`/watchlist`);
 }
+
+export const createWatchList = async (watchListId) => {
+  return apiClient.post('/watchlist', {id: watchListId})
+}

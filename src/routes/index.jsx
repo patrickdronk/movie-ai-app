@@ -1,9 +1,10 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import BaseLayout from '../components/BaseLayout.jsx';
 import WatchList from '../components/watchList/WatchList.jsx';
 import { Col, Row } from 'antd';
 import SearchBar from '../components/searchBar/SearchBar.jsx';
+import { getWatchListByUserId } from '../components/watchList/queries.js';
 
 export const Route = createFileRoute('/')({
   beforeLoad: ({ context, location }) => {
@@ -20,22 +21,28 @@ export const Route = createFileRoute('/')({
 });
 
 function HomeComponent() {
-  const queryClient = new QueryClient({});
+  const { data, isLoading } = useQuery({
+    queryKey: ['watchList'], queryFn: async () => {
+      return getWatchListByUserId();
+    },
+  });
+
+  if (isLoading) {
+    return (<div>Loading</div>);
+  }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <BaseLayout>
-        <Row style={{ marginBottom: '1rem' }}>
-          <Col span={24}>
-            <SearchBar />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <WatchList />
-          </Col>
-        </Row>
-      </BaseLayout>
-    </QueryClientProvider>
+    <BaseLayout>
+      <Row style={{ marginBottom: '1rem' }}>
+        <Col span={24}>
+          <SearchBar watchListId={data.data.watchListId}/>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <WatchList data={data} />
+        </Col>
+      </Row>
+    </BaseLayout>
   );
 }
