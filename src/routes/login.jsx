@@ -1,42 +1,31 @@
-import { useEffect, useCallback, useMemo, useContext } from 'react';
+import { useEffect, useMemo, useContext } from 'react';
 import { register, Hanko } from '@teamhanko/hanko-elements';
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Col, Row, Image } from 'antd';
 import { AuthContext } from '../config/AuthContext.js';
 
 const hankoApi = import.meta.env.VITE_HANKO_API_URL;
 
-export const Route = createFileRoute('/login')(
-  {
-    beforeLoad: ({ context, location }) => {
-      if (context.isAuthenticated) {
-        throw redirect({
-          to: '/',
-          search: {
-            redirect: location.href,
-          },
-        });
-      }
-    },
-    component: Login
-  }
-);
+export const Route = createFileRoute('/login')({
+  component: Login,
+});
 
 export default function Login() {
   const navigate = useNavigate();
   const hanko = useMemo(() => new Hanko(hankoApi), []);
-  const {isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, setSession } = useContext(AuthContext);
 
-  const redirectAfterLogin = useCallback(async () => {
-    await navigate({ to: '/' });
-  }, [navigate]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate({ to: '/' });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() =>
-      hanko.onSessionCreated(async () => {
-        setIsAuthenticated(true);
-        await redirectAfterLogin();
+      hanko.onSessionCreated(async (session) => {
+        setSession({ jwt: session.jwt, isAuthenticated: true });
       }),
-    [hanko, redirectAfterLogin],
+    [hanko, setSession],
   );
 
   useEffect(() => {
@@ -44,10 +33,6 @@ export default function Login() {
       console.error('Failed to register Hanko Elements', error);
     });
   }, []);
-
-  if(isAuthenticated) {
-    redirectAfterLogin()
-  }
 
   return (
     <div className="login-container">

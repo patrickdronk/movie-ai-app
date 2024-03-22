@@ -8,15 +8,16 @@ const SearchBar = ({ watchListId }) => {
   const [query, setQuery] = useState('');
 
   const { data } = useQuery({
-    queryKey: ['search_movies'],
-    queryFn: () => searchMovies(query), enabled: !!query,
+    queryKey: ['search_movies', query],
+    queryFn: () => searchMovies(query),
+    enabled: !!query,
   });
 
   const { mutate } = useMutation({
     mutationKey: ['add_movie_to_watchlist'],
     mutationFn: ({ watchListId, imdbId }) => addMovieToWatchList(watchListId, imdbId),
     onSuccess: () => {
-      queryClient.invalidateQueries('watchList');
+      queryClient.invalidateQueries(['watchList']);
     },
   });
 

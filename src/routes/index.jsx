@@ -22,9 +22,8 @@ export const Route = createFileRoute('/')({
 
 function HomeComponent() {
   const { data, isLoading } = useQuery({
-    queryKey: ['watchList'], queryFn: async () => {
-      return getWatchListByUserId();
-    },
+    queryKey: ['watchList'],
+    queryFn: async () => getWatchListByUserId(),
   });
 
   if (isLoading) {

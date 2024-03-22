@@ -3,10 +3,10 @@ import { List } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { getMovieByIds } from '../watchList/queries.js';
 
-const MovieView = ({ moviesIds }) => {
+const MovieView = (props) => {
   const { data, isLoading } = useQuery({
     queryKey: ["movies"],
-    queryFn: () => getMovieByIds(moviesIds)
+    queryFn: () => getMovieByIds(props.movieIds)
   })
 
   if(isLoading) {
@@ -17,16 +17,8 @@ const MovieView = ({ moviesIds }) => {
 
   return (
     <List
-      grid={{
-        justify: 'space-evenly',
-        gutter: 16,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-        xl: 5,
-      }}
-      dataSource={data}
+      grid={{ justify: 'space-evenly', gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, }}
+      dataSource={data.data}
       renderItem={movie => (
         <List.Item>
           <MovieCard movie={movie} />
