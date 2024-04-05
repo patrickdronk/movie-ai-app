@@ -4,13 +4,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createWatchList } from './queries.js';
 import MovieView from '../movieView/MovieView.jsx';
 
-const WatchList = ({data}) => {
+const WatchList = ({ data }) => {
+  console.log(data);
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationKey: ['create_watchlist'],
     mutationFn: createWatchList,
-    onSuccess: () => {
+    onSettled: () => {
       queryClient.invalidateQueries('watchList');
     },
   });
@@ -25,7 +26,14 @@ const WatchList = ({data}) => {
         >
           <Button type="primary" onClick={() => mutate(crypto.randomUUID())}>Create one</Button>
         </Empty>)}
-        {data?.data !== null && (<MovieView movieIds={data?.data.movieIds} />)}
+
+        {data?.data !== null && data?.data.movieIds.length === 0 && (<Empty
+          image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+          imageStyle={{ height: 60 }}
+          description={<span>No movies in your watchlist</span>}
+        >
+        </Empty>)}
+        {data?.data !== null && data?.data.movieIds.length > 0 && (<MovieView movieIds={data?.data.movieIds} />)}
       </Card>
     </Col>
   </Row>);

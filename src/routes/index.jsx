@@ -21,13 +21,20 @@ export const Route = createFileRoute('/')({
 });
 
 function HomeComponent() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['watchList'],
-    queryFn: async () => getWatchListByUserId(),
+    queryFn: async () => {
+      console.log("invalidated");
+      return getWatchListByUserId()
+    },
   });
 
   if (isLoading) {
     return (<div>Loading</div>);
+  }
+
+  if(isError) {
+    return (<div>Error</div>);
   }
 
   return (
